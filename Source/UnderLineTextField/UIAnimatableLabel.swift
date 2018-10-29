@@ -9,7 +9,6 @@
 import UIKit
 
 /// Label that can animate text color
-@IBDesignable
 public class UIAnimatableLabel: UIView {
     //============
     // MARK: - inits
@@ -67,7 +66,7 @@ public class UIAnimatableLabel: UIView {
     //===================
     // MARK: IBInspectable
     //===================
-    @IBInspectable var text: String? {
+    var text: String? {
         set {
             textLayer.string = newValue
             setContentSize()
@@ -77,7 +76,7 @@ public class UIAnimatableLabel: UIView {
         }
 
     }
-    @IBInspectable var textColor: UIColor! {
+    var textColor: UIColor! {
         set {
             textLayer.foregroundColor = newValue.cgColor
         }
