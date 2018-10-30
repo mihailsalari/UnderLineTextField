@@ -26,13 +26,27 @@ open class UnderLineTextField: UITextField {
   
   // placeholder position
   override open func textRect(forBounds bounds: CGRect) -> CGRect {
-    return bounds.insetBy(dx: insetX, dy: insetY)
+    if isSecureTextEntry {
+      return CGRect(x: bounds.origin.x+10,
+                    y: bounds.origin.y,
+                    width: bounds.width-44,
+                    height: bounds.height)
+    } else {
+      return CGRect(x: bounds.origin.x+10,
+                    y: bounds.origin.y,
+                    width: bounds.width,
+                    height: bounds.height)
+    }
   }
   
   // text position
   override open func editingRect(forBounds bounds: CGRect) -> CGRect {
-    return bounds.insetBy(dx: insetX, dy: insetY)
+    return textRect(forBounds: bounds)
   }
+  
+//  override open func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+//    return bounds.insetBy(dx: insetX, dy: insetY)
+//  }
   
   private var isLayoutCalled = false
   //============
@@ -179,6 +193,7 @@ open class UnderLineTextField: UITextField {
                               multiplier: 1,
                               constant: 0)
   }()
+  
   private lazy var clearButton: UIButton = {
     let button = UIButton(type: .custom)
     let bundle = Bundle.init(for: UnderLineTextField.self)
@@ -193,14 +208,17 @@ open class UnderLineTextField: UITextField {
     rightView = button
     return button
   }()
+  
   /// layer which line will be drawn on it
   private lazy var lineLayer: CAShapeLayer = {
     let layer = CAShapeLayer(layer: self.layer)
     layer.lineCap = CAShapeLayerLineCap.round
     layer.strokeColor = lineColor.cgColor
     layer.lineWidth = lineWidth
+    
     return layer
   }()
+  
   /// label for displaying error
   private lazy var errorLabel: UIAnimatableLabel = {
     let label = UIAnimatableLabel()
@@ -209,6 +227,7 @@ open class UnderLineTextField: UITextField {
     if let fontName = font?.familyName, let size = font?.pointSize {
       label.font = UIFont(name: fontName, size: size * 0.8)
     }
+    
     addSubview(label)
     neededConstraint.append(NSLayoutConstraint(item: label,
                                                attribute: .leading,
@@ -223,7 +242,7 @@ open class UnderLineTextField: UITextField {
                                                toItem: self,
                                                attribute: .bottom,
                                                multiplier: 1,
-                                               constant: 0))
+                                               constant: 10))
     neededConstraint.append(NSLayoutConstraint(item: label,
                                                attribute: .trailing,
                                                relatedBy: .equal,
@@ -578,7 +597,7 @@ extension UnderLineTextField {
         self.placeholderLabel.transform = .identity
         return
       }
-      UIView.animate(withDuration: animationDuration, animations: {
+      UIView.animate(withDuration: animationDuration, animations: { [unowned self] in
         self.placeholderLabel.transform = .identity
       })
       animatePlaceholderColor()
@@ -599,11 +618,13 @@ extension UnderLineTextField {
   }
   /// create line bezier path
   private func createLinePath() -> UIBezierPath {
+    
     let path = UIBezierPath()
     let heightLine = (font?.pointSize ?? 0) + 8
-    let padding = heightLine + heightLine * 0.8 + 9
+    let padding = heightLine + heightLine * 0.8 + 9 + 10
     path.move(to: CGPoint(x: 0, y: padding))
     path.addLine(to: CGPoint(x: bounds.maxX, y: padding))
+    
     return path
   }
   
