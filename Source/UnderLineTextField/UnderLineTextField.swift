@@ -11,6 +11,11 @@ import QuartzCore
 
 /// Simple UITextfield Subclass with state
 open class UnderLineTextField: UITextField {
+  
+  open override func textRect(forBounds bounds: CGRect) -> CGRect {
+    return bounds.inset(by: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0))
+  }
+  
   private var isLayoutCalled = false
   //============
   // MARK: - inits
@@ -193,7 +198,7 @@ open class UnderLineTextField: UITextField {
                                                toItem: self,
                                                attribute: .leading,
                                                multiplier: 1,
-                                               constant: 0))
+                                               constant: 10))
     neededConstraint.append(NSLayoutConstraint(item: label,
                                                attribute: .bottom,
                                                relatedBy: .equal,
@@ -224,7 +229,7 @@ open class UnderLineTextField: UITextField {
                                                toItem: self,
                                                attribute: .leading,
                                                multiplier: 1,
-                                               constant: 0))
+                                               constant: 10))
     neededConstraint.append(NSLayoutConstraint(item: label,
                                                attribute: .centerY,
                                                relatedBy: .equal,
@@ -278,7 +283,7 @@ open class UnderLineTextField: UITextField {
     }
   }
   /// placeholder color when textfield is not focused
-  open var inactivePlaceholderTextColor: UIColor = .darkText {
+  open var inactivePlaceholderTextColor: UIColor = UIColor.black.withAlphaComponent(0.3) {
     didSet {
       if oldValue != inactivePlaceholderTextColor {
         setNeedsDisplay()
@@ -392,15 +397,6 @@ extension UnderLineTextField {
     }
     get {
       return placeholderLabel.text
-    }
-  }
-  
-  open var labelTextColor: UIColor? {
-    set {
-      placeholderLabel.textColor = newValue
-    }
-    get {
-      return placeholderLabel.textColor
     }
   }
   
