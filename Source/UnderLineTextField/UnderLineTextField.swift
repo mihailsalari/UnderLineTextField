@@ -12,8 +12,26 @@ import QuartzCore
 /// Simple UITextfield Subclass with state
 open class UnderLineTextField: UITextField {
   
-  open override func textRect(forBounds bounds: CGRect) -> CGRect {
-    return bounds.inset(by: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0))
+  open var insetX: CGFloat = 10 {
+    didSet {
+      layoutIfNeeded()
+    }
+  }
+  
+  open var insetY: CGFloat = 10 {
+    didSet {
+      layoutIfNeeded()
+    }
+  }
+  
+  // placeholder position
+  override open func textRect(forBounds bounds: CGRect) -> CGRect {
+    return bounds.insetBy(dx: insetX, dy: insetY)
+  }
+  
+  // text position
+  override open func editingRect(forBounds bounds: CGRect) -> CGRect {
+    return bounds.insetBy(dx: insetX, dy: insetY)
   }
   
   private var isLayoutCalled = false
